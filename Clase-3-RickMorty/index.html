@@ -31,14 +31,15 @@
       <div class="columns is-multiline grid">
 
       </div>
-      </div>
+      
 
       <div class="modal">
-         <div class="modal-background"></div> 
+         <div class="modal-background">
         <div class="modal-content">
               <!--Elementos-->
         </div>
         <button class="modal-close is-large" aria-label="close"></button>
+        </div>
       </div>
 
   <script>
@@ -159,16 +160,18 @@ const getCharactersByQuery = async (baseURL, query) => {
     const $modalClose = document.querySelector('.modal-close');
 
     $modalOpenArr.forEach((boton)=>{
-        boton.addEventListener('click',()=>{
+        boton.addEventListener('click',async (event)=>{
         $modal.classList.add("is-active");
         console.log('click')
-        const charactersByQueryModal =  getCharacter(baseURL, id);
+        console.log (boton.id);
+        const charactersByQueryModal = await getCharacter(baseURL, boton.id);
         appendElementsModal(charactersByQueryModal.results, true)
+
+        
       })
     })
-        
 
-    const modalInfo = async (props) => {
+      const modalInfo = async (props) => {
         const {image, name, species, origin, gender, status, id} = props;
         const {name: planet, url} = origin;
 
@@ -184,11 +187,14 @@ const getCharactersByQuery = async (baseURL, query) => {
            </section>
       `}
 
-     const getCharacter = async (baseURL, id) => {
+
+      const getCharacter = async (baseURL, id) => {
         const url = `${baseURL}character/${id}`;
+        console.log(baseURL);
+        console.log(url);
         const response = await fetch(url);
         const character = await response.json();
-        console.log(character)
+        console.log(id)
         return character
         }
 
@@ -197,14 +203,16 @@ const getCharactersByQuery = async (baseURL, query) => {
         const url = `${baseURL}character/?name=${query}`;
         const response = await fetch(url);
         const character = await response.json();
-        return character
-        }
-
-        const appendElementsModal = (character) => {
+        return character}
+    
+    const appendElementsModal = (character) => {
           const $modal = document.querySelector('.modal');
           const modalInfoHTML = modalInfo(character);
-          $modal.innerHTML += modalInfoHTML;
+          $modal.innerHTML = modalInfoHTML;
         }
+        
+
+    
 
         $modalClose.addEventListener('click',()=>{
       $modal.classList.remove("is-active");
