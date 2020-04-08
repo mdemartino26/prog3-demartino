@@ -48,3 +48,14 @@
     background-color: white;
 }
 
+.modal-card-body.image {
+    display: block;
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.h1 {
+    font-size: 3em;
+    text-align: center;
+}

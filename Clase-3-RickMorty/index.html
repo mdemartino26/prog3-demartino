@@ -35,7 +35,7 @@
 
       <div class="modal">
          <div class="modal-background">
-        <div class="modal-content">
+           <div class="modal-content">
               <!--Elementos-->
         </div>
         <button class="modal-close is-large" aria-label="close"></button>
@@ -165,7 +165,7 @@ const getCharactersByQuery = async (baseURL, query) => {
         console.log('click')
         console.log (boton.id);
         const charactersByQueryModal = await getCharacter(baseURL, boton.id);
-        appendElementsModal(charactersByQueryModal.results, true)
+        appendElementsModal(charactersByQueryModal, true)
 
         
       })
@@ -173,16 +173,16 @@ const getCharactersByQuery = async (baseURL, query) => {
 
       const modalInfo = async (props) => {
         const {image, name, species, origin, gender, status, id} = props;
-        const {name: planet, url} = origin;
+        const {name: planet, url: planeta} = origin;
 
         return `
             <section class="modal-card-body">
-              <figure class="image is-48x48"> <img src="${image}" alt="${name}"> </figure>
+              <figure class="image "> <img src="${image}" alt="${name}"> </figure>
               <h1> ${name}</h1>
               <p class="p is-5">Gender: ${gender}</p>
               <p class="p is-5">Species: ${species}</p>
-              <p class="p is-5">Origin: ${origin}</p>
-              <figure class="image is-48x48"> <img src="${url}" alt="${planet}"> </figure>
+              <p class="p is-5">Origin: ${planet}</p>
+              <figure class="image"> <img src="${planeta}" alt="${planet}"> </figure>
               <p class="p is-5">Status: ${status}</p>
            </section>
       `}
@@ -205,29 +205,21 @@ const getCharactersByQuery = async (baseURL, query) => {
         const character = await response.json();
         return character}
     
-    const appendElementsModal = (character) => {
-          const $modal = document.querySelector('.modal');
-          const modalInfoHTML = modalInfo(character);
-          $modal.innerHTML = modalInfoHTML;
+    const appendElementsModal = async (character) => {
+          const $modalContenido = document.querySelector('.modal-content');
+          const modalInfoHTML = await modalInfo(character);
+          $modalContenido.innerHTML = modalInfoHTML;
         }
         
 
     
 
         $modalClose.addEventListener('click',()=>{
-      $modal.classList.remove("is-active");
+        $modal.classList.remove("is-active");
     })
 
     
   }
-
-
-    //const $submit = document.querySelector('.handle_search'); --------> querySelector
-
-
-    
-   
-
 
   main();
   
