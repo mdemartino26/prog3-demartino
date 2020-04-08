@@ -1,0 +1,11 @@
+*{
+    background-color: rgb(192, 133, 153);
+    color: white;
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 2%; 
+}
+
+#loader{
+    display:none;
+}
