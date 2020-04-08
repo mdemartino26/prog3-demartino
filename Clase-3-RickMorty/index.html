@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <link href="assets/css/styles.css" type="text/css" rel="stylesheet">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
   <body>
@@ -33,7 +34,7 @@
       </div>
 
       <div class="modal">
-        <div class="modal-background"></div>
+         <div class="modal-background"></div> 
         <div class="modal-content">
               <!--Elementos-->
         </div>
@@ -44,7 +45,7 @@
 
   const cardItem = props => {
 
-    const {image, name, species, origin} = props;
+    const {image, name, species, origin, id} = props;
     const {name: planet, url} = origin;
 
     return `
@@ -65,10 +66,10 @@
                         <div class="media-content">
                           <h2 class="title is-3">${name}</h2>
                           <h3 class="title is-4">${species}</h3>
-                          <p class="p is-5">${planet}</p>
+                          <h4 class="title is-5">${planet}</h4>
                         </div>
                         <div class="buttons">
-                              <button class="button is-primary open_modal"> Primary </button>
+                              <button id="${id}" class="button is-primary open_modal"> Información </button>
                         </div>
                       </div>
                     </div>
@@ -77,22 +78,6 @@
         `
   }
 
-const modalInfo = props => {
-  const {image, name, species, origin, gender, status} = props;
-  const {name: planet, url} = origin;
-
-  return `
-        <div class="modal-content">
-            <header class="modal-card-head">
-              <h1 class="modal-card-title">${name}</p>
-            </header>
-            <section class="modal-card-body">
-              
-           </section>
-        </div>
-  
-  `
-}
 
   const getCharacters = async (baseURL, from, to) => {
   //   //Array.from{length: 5}, (v, i) => i);
@@ -124,7 +109,6 @@ const getCharactersByQuery = async (baseURL, query) => {
       $grid.innerHTML += cardItemHTML;
 
       const $modalOpenArr = document.querySelectorAll('.open_modal');
-
       const $modal = document.querySelector('.modal');
       const $modalClose = document.querySelector('.modal-close');
 
@@ -148,9 +132,9 @@ const getCharactersByQuery = async (baseURL, query) => {
 
     //Parte 1: Obtener elementos de la api y mostrarlos en el dom
 
-   const characters = await getCharacters(baseURL, 1, 20);
-   console.log(characters)
-    appendElements(characters)
+  const characters = await getCharacters(baseURL, 1, 20);
+  console.log(characters)
+  appendElements(characters)
 
 
     //Parte 2: Crear un buscador de personajes
@@ -162,30 +146,79 @@ const getCharactersByQuery = async (baseURL, query) => {
     const valor = $input.value;
       
 
-     const charactersByQuery = await getCharactersByQuery(baseURL, valor);
+     const charactersByQuery = await getCharactersByQuery(baseURL, boton.id);
      console.log(charactersByQuery.results);
     appendElements(charactersByQuery.results, true)
    });
 
+   //Modal 
 
-   const $modalOpenArr = document.querySelectorAll('.open_modal');
 
-   const $modal = document.querySelector('.modal');
+    const $modalOpenArr = document.querySelectorAll('.open_modal');
+    const $modal = document.querySelector('.modal');
     const $modalClose = document.querySelector('.modal-close');
 
     $modalOpenArr.forEach((boton)=>{
-        modalInfo;
         boton.addEventListener('click',()=>{
         $modal.classList.add("is-active");
         console.log('click')
+        const charactersByQueryModal =  getCharacter(baseURL, id);
+        appendElementsModal(charactersByQueryModal.results, true)
       })
     })
+        
 
-   
-    $modalClose.addEventListener('click',()=>{
+    const modalInfo = async (props) => {
+        const {image, name, species, origin, gender, status, id} = props;
+        const {name: planet, url} = origin;
+
+        return `
+            <section class="modal-card-body">
+              <figure class="image is-48x48"> <img src="${image}" alt="${name}"> </figure>
+              <h1> ${name}</h1>
+              <p class="p is-5">Gender: ${gender}</p>
+              <p class="p is-5">Species: ${species}</p>
+              <p class="p is-5">Origin: ${origin}</p>
+              <figure class="image is-48x48"> <img src="${url}" alt="${planet}"> </figure>
+              <p class="p is-5">Status: ${status}</p>
+           </section>
+      `}
+
+     const getCharacter = async (baseURL, id) => {
+        const url = `${baseURL}character/${id}`;
+        const response = await fetch(url);
+        const character = await response.json();
+        console.log(character)
+        return character
+        }
+
+        const getCharactersByQueryModal = async (baseURL, query) => {
+
+        const url = `${baseURL}character/?name=${query}`;
+        const response = await fetch(url);
+        const character = await response.json();
+        return character
+        }
+
+        const appendElementsModal = (character) => {
+          const $modal = document.querySelector('.modal');
+          const modalInfoHTML = modalInfo(character);
+          $modal.innerHTML += modalInfoHTML;
+        }
+
+        $modalClose.addEventListener('click',()=>{
       $modal.classList.remove("is-active");
     })
-        }
+
+    
+  }
+
+
+    //const $submit = document.querySelector('.handle_search'); --------> querySelector
+
+
+    
+   
 
 
   main();

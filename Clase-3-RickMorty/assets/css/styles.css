@@ -1,0 +1,24 @@
+.media 
+    {
+        display: block;
+    }
+
+.media-left    
+    {
+        display: none;
+    }
+
+.media-content
+    {
+        text-align: center;
+    }
+
+.title.is-5 
+    {
+        font-size: 1rem;
+    }
+
+.modal-card-body{
+    background-color: white;
+}
+
